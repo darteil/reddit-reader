@@ -1,0 +1,27 @@
+{
+  "name": "reddit-reader",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.ts",
+  "types": "index.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "nodemon"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@fastify/env": "^4.1.0",
+    "@fastify/static": "^6.5.0",
+    "dotenv": "^16.0.3",
+    "fastify": "^4.6.0",
+    "snoowrap": "^1.23.0",
+    "ts-node": "^10.9.1"
+  },
+  "devDependencies": {
+    "@types/node": "^18.7.23",
+    "nodemon": "^2.0.20",
+    "typescript": "^4.8.4"
+  }
+}
