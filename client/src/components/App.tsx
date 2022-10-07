@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { getSubscriptions } from 'api';
+import useStore from 'store';
 import styled from 'styled-components';
 
 const Demo = styled.div`
@@ -15,6 +16,8 @@ Demo.displayName = 'Demo';
 
 function App() {
   const [posts, setPosts] = useState<string[]>([]);
+  const subreddit = useStore((state) => state.currentSubreddit);
+  const setSubreddit = useStore((state) => state.setCurrentSubreddit);
 
   useEffect(() => {
     getSubscriptions().then((res) => {
@@ -24,6 +27,14 @@ function App() {
 
   return (
     <Demo>
+      <h1>{subreddit}</h1>
+      <button
+        onClick={() => {
+          setSubreddit('new subreddit');
+        }}
+      >
+        Set sub
+      </button>
       {posts.map((post) => (
         <p>{post}</p>
       ))}
