@@ -10,11 +10,6 @@ const reddit = new snoowrap({
 });
 
 export const routes = async (server: FastifyInstance) => {
-  // Get hot posts
-  server.get("/hot", async () => {
-    return reddit.getHot().then((post) => post);
-  });
-
   // Get my subreddit titles
   server.get("/subscriptions", async () => {
     const subs = reddit.getSubscriptions();
@@ -27,17 +22,26 @@ export const routes = async (server: FastifyInstance) => {
   // Get subreddit hot posts
   interface IParamsSubredditHot {
     subreddit: string;
+    fullname: string;
   }
 
   server.get(
-    "/:subreddit/hot",
+    "/:subreddit/:fullname/hot",
     async (request: FastifyRequest<{ Params: IParamsSubredditHot }>) => {
-      const { subreddit } = request.params;
+      const { subreddit, fullname } = request.params;
 
       return reddit
         .getSubreddit(subreddit)
-        .getHot()
-        .then((posts) => posts.map((post) => post.title));
+        .getHot({ limit: 25, after: fullname === "" ? undefined : fullname })
+        .then((posts) =>
+          posts.map((post) => ({
+            title: post.title,
+            postedBy: `Posted by: ${post.author.name} ${post.created}`,
+            upVotes: post.ups,
+            thumbnail: post.thumbnail,
+            fullname: post.name,
+          }))
+        );
     }
   );
 
