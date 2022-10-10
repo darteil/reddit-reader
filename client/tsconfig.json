@@ -15,6 +15,11 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
+    "plugins": [
+      {
+        "name": "typescript-styled-plugin"
+      }
+    ],
     "baseUrl": "./src"
   },
   "include": ["src"],
