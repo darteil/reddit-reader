@@ -36,10 +36,12 @@ export const routes = async (server: FastifyInstance) => {
         .then((posts) =>
           posts.map((post) => ({
             title: post.title,
-            postedBy: `Posted by: ${post.author.name} ${post.created}`,
+            postedBy: post.author.name,
+            created: post.created,
             upVotes: post.ups,
             thumbnail: post.thumbnail,
             fullname: post.name,
+            text: post.selftext,
           }))
         );
     }
