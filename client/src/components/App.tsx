@@ -1,14 +1,35 @@
 import { useState, useEffect } from 'react';
+import Cookies from 'js-cookie';
 import useStore from 'store';
+import { login, getRedditAuthUrl } from '../api';
 
 const App = () => {
-  const [posts, setPosts] = useState<string[]>([]);
-  const subreddit = useStore((state) => state.currentSubreddit);
-  const setSubreddit = useStore((state) => state.setCurrentSubreddit);
+  const [authUrl, setAuthUrl] = useState('');
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    const getUrl = async () => {
+      const url = await getRedditAuthUrl();
+      setAuthUrl(url);
+    };
 
-  return <div>Test</div>;
+    if (!Cookies.get('token')) {
+      const queryString = window.location.search;
+      const urlParams = new URLSearchParams(queryString);
+      const code = urlParams.get('code');
+      if (code) {
+        login(code);
+      } else {
+        getUrl();
+      }
+    }
+  }, []);
+
+  return (
+    <div>
+      {authUrl && <a href={authUrl}>login</a>}
+      {!authUrl && <div>Welcome to hell</div>}
+    </div>
+  );
 };
 
 export default App;
