@@ -1,4 +1,4 @@
-import { fastify, FastifyReply, FastifyRequest } from "fastify";
+import Fastify from "fastify";
 import fastifyEnv from "@fastify/env";
 import servestatic from "@fastify/static";
 import path from "path";
@@ -9,7 +9,7 @@ const staticPath = path.join(__dirname, "..", "client/dist");
 
 const envSchema = {
   type: "object",
-  required: ["PORT", "userAgent", "clientId", "clientSecret", "refreshToken"],
+  required: ["PORT", "userAgent", "clientId", "clientSecret"],
   properties: {
     port: {
       type: "string",
@@ -39,29 +39,29 @@ const options = {
   data: process.env,
 };
 
-const server = fastify({
-  logger: true,
-});
+const app = Fastify({});
 
-server.register(fastifyEnv, options).ready((err) => {
-  if (err) server.log.error(err);
-});
+(async () => {
+  await app.register(fastifyEnv, options).ready((err) => {
+    if (err) app.log.error(err);
+  });
 
-server.register(servestatic, {
-  root: staticPath,
-});
+  await app.register(servestatic, {
+    root: staticPath,
+  });
 
-server.register(routes, { prefix: "api" });
+  await app.register(routes, { prefix: "api" });
+})();
 
-server.get("/", (request: FastifyRequest, reply: FastifyReply) => {
+app.get("/", (request, reply) => {
   reply.sendFile("index.html");
 });
 
 const start = async () => {
   try {
-    await server.listen({ port: parseInt(config.port || "3000") });
+    await app.listen({ port: parseInt(config.port) });
   } catch (err) {
-    server.log.error(err);
+    app.log.error(err);
     process.exit(1);
   }
 };
