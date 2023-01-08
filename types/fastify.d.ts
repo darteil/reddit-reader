@@ -1,11 +1,12 @@
-// declare module "fastify" {
-//   interface FastifyInstance {
-//     config: {
-//       port: string;
-//       userAgent: string;
-//       clientId: string;
-//       clientSecret: string;
-//       refreshToken: string;
-//     };
-//   }
-// }
+declare module "fastify" {
+  interface FastifyInstance {
+    config: {
+      PORT: string;
+      USER_AGENT: string;
+      CLIENT_ID: string;
+      CLIENT_SECRET: string;
+    };
+  }
+}
+
+export {};

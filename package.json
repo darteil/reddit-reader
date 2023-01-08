@@ -2,7 +2,7 @@
   "name": "reddit-reader",
   "version": "1.0.0",
   "description": "",
-  "exports": "./src/index.ts",
+  "main": "./src/index.ts",
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "start": "nodemon ./src/index.ts"
@@ -15,7 +15,6 @@
     "@fastify/env": "^4.1.0",
     "@fastify/static": "^6.5.0",
     "axios": "^1.2.1",
-    "dotenv": "^16.0.3",
     "fastify": "^4.6.0",
     "ts-node": "^10.9.1"
   },

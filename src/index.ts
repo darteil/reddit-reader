@@ -3,27 +3,27 @@ import fastifyEnv from "@fastify/env";
 import servestatic from "@fastify/static";
 import path from "path";
 import { routes } from "./reddit-api";
-import { config } from "./utils/config";
 
 const staticPath = path.join(__dirname, "..", "client/dist");
+const envPath = path.join(__dirname, "..", "/.env");
 
 const envSchema = {
   type: "object",
-  required: ["PORT", "userAgent", "clientId", "clientSecret"],
+  required: ["PORT", "USER_AGENT", "CLIENT_ID", "CLIENT_SECRET"],
   properties: {
-    port: {
+    PORT: {
       type: "string",
       default: 3000,
     },
-    userAgent: {
+    USER_AGENT: {
       type: "string",
       default: "",
     },
-    clientId: {
+    CLIENT_ID: {
       type: "string",
       default: "",
     },
-    clientSecret: {
+    CLIENT_SECRET: {
       type: "string",
       default: "",
     },
@@ -34,36 +34,30 @@ const options = {
   confKey: "config",
   schema: envSchema,
   dotenv: {
-    path: `${path.join(__dirname, "..", "/.env")}`,
+    path: envPath,
   },
-  data: process.env,
 };
 
-const app = Fastify({});
-
-(async () => {
-  await app.register(fastifyEnv, options).ready((err) => {
-    if (err) app.log.error(err);
-  });
-
-  await app.register(servestatic, {
-    root: staticPath,
-  });
-
-  await app.register(routes, { prefix: "api" });
-})();
-
-app.get("/", (request, reply) => {
-  reply.sendFile("index.html");
-});
-
-const start = async () => {
+const startServer = async () => {
+  const app = Fastify({});
   try {
-    await app.listen({ port: parseInt(config.port) });
+    await app.register(fastifyEnv, options);
+
+    await app.register(servestatic, {
+      root: staticPath,
+    });
+
+    await app.register(routes, { prefix: "api" });
+
+    app.get("/", (_, reply) => {
+      reply.sendFile("index.html");
+    });
+
+    app.listen({ port: parseInt(app.config.PORT) });
   } catch (err) {
     app.log.error(err);
     process.exit(1);
   }
 };
 
-start();
+startServer();
