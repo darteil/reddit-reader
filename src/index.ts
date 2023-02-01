@@ -4,7 +4,7 @@ import servestatic from "@fastify/static";
 import type { FastifyCookieOptions } from "@fastify/cookie";
 import cookie from "@fastify/cookie";
 import path from "path";
-import { routes } from "./reddit-api";
+import { routes } from "./api";
 
 const staticPath = path.join(__dirname, "..", "client/dist");
 const envPath = path.join(__dirname, "..", "/.env");
@@ -53,7 +53,8 @@ const startServer = async () => {
       parseOptions: { httpOnly: true },
     } as FastifyCookieOptions);
 
-    await app.register(routes, { prefix: "api" });
+    await app.register(routes.authRoutes, { prefix: "api" });
+    await app.register(routes.baseRoutes, { prefix: "api" });
 
     app.get("/", (_, reply) => {
       reply.sendFile("index.html");

@@ -1,10 +1,10 @@
 import { FastifyInstance } from "fastify";
-import { AxiosError, request } from "axios";
-import axiosInstance from "./utils/axiosInstance";
+import { AxiosError } from "axios";
+import axiosInstance from "./axiosInstance";
 
 const tokenUrl = "https://www.reddit.com/api/v1/access_token";
 
-export const routes = async (server: FastifyInstance) => {
+export const authRoutes = async (server: FastifyInstance) => {
   // Get reddit authorization url
   server.get("/auth-url", (_, reply) => {
     const scope = "mysubreddits read history";
@@ -42,12 +42,6 @@ export const routes = async (server: FastifyInstance) => {
     }
   });
 
-  // Logout
-  server.post("/logout", async (request, reply) => {
-    reply.clearCookie("refresh_token", { path: "/" });
-    reply.clearCookie("access_token", { path: "/" });
-  });
-
   // Refresh token
   server.post("/refresh-token", async (request, reply) => {
     const params = new URLSearchParams({
@@ -67,7 +61,20 @@ export const routes = async (server: FastifyInstance) => {
       });
       reply.setCookie("access_token", data.access_token, { path: "/" });
     } catch (err) {
-      server.log.error(err);
+      if (err instanceof AxiosError) {
+        reply
+          .status(err?.response?.status || 500)
+          .send(err?.response?.statusText || "Unexpected error");
+        console.log(err);
+      } else {
+        reply.send(err);
+      }
     }
+  });
+
+  // Logout
+  server.post("/logout", async (_, reply) => {
+    reply.clearCookie("refresh_token", { path: "/" });
+    reply.clearCookie("access_token", { path: "/" });
   });
 };
