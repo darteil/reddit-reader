@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import Cookies from 'js-cookie';
 import useStore from 'store';
-import { login, logout, refreshToken, getRedditAuthUrl } from '../api';
+import { getPosts, login, logout, getRedditAuthUrl } from 'api';
+import { Wrapper } from '../Wrapper';
 
 const App = () => {
   const [authUrl, setAuthUrl] = useState('');
@@ -15,41 +15,26 @@ const App = () => {
       setAuthUrl(url);
     };
 
+    getPosts();
+
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const code = urlParams.get('code');
-    const authStatus = localStorage.getItem('authorized');
 
-    if (!authStatus && !code) {
+    if (!authorized && !code) {
       getUrl();
-    } else if (!authStatus && code) {
+    } else if (!authorized && code) {
       login(code);
-      const url = document.location.href;
-      window.history.pushState({}, '', url.split('?')[0]);
-      localStorage.setItem('authorized', 'true');
+      setAuthorized(true);
+    } else if (authorized) {
       setAuthorized(true);
     }
   }, []);
 
-  const exit = () => {
-    logout();
-    setAuthorized(false);
-    localStorage.removeItem('authorized');
-  };
-
   return (
     <div>
       {!authorized && <a href={authUrl}>login</a>}
-      {authorized && (
-        <div>
-          <ul>
-            {subreddits.map((item) => (
-              <li>{item}</li>
-            ))}
-          </ul>
-          <button onClick={exit}>Logout</button>
-        </div>
-      )}
+      {authorized && <Wrapper />}
     </div>
   );
 };

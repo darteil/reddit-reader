@@ -1,10 +1,27 @@
 import axios, { AxiosError } from 'axios';
+import useStore from 'store';
+
+let { authorized } = useStore.getState();
+const { setAuthorized } = useStore.getState();
+const unsubscribeAuthorized = useStore.subscribe(
+  (state) => state.authorized,
+  () => {
+    authorized = useStore.getState().authorized;
+  },
+);
 
 export const refreshToken = async () => {
   try {
     await axios.post('http://127.0.0.1:7000/api/refresh-token');
   } catch (err) {
-    console.log(err);
+    if (err instanceof AxiosError) {
+      if (err?.response?.status === 400) {
+        logout();
+        setAuthorized(false);
+      }
+    } else {
+      console.log(err);
+    }
   }
 };
 
@@ -20,7 +37,7 @@ axiosInstance.interceptors.response.use(
   async (error: AxiosError) => {
     const originalRequest = error.config;
 
-    if (error?.response?.status === 401) {
+    if (error?.response?.status === 401 && authorized) {
       await refreshToken();
       return axiosInstance(originalRequest);
     } else {
@@ -32,7 +49,11 @@ axiosInstance.interceptors.response.use(
 export const login = async (code: string) => {
   try {
     const { data } = await axiosInstance.post('/login', { code });
-    if (data) localStorage.setItem('authorized', 'yes');
+    if (data === 'authorization success') {
+      const url = document.location.href;
+      window.history.pushState({}, '', url.split('?')[0]);
+      setAuthorized(true);
+    }
   } catch (err) {
     console.log(err);
   }
@@ -41,6 +62,7 @@ export const login = async (code: string) => {
 export const logout = async () => {
   try {
     axiosInstance.post('/logout');
+    setAuthorized(false);
   } catch (err) {
     console.log(err);
   }
@@ -53,5 +75,23 @@ export const getRedditAuthUrl = async () => {
   } catch (err) {
     console.log(err);
     return '';
+  }
+};
+
+export const getMySubreddits = async () => {
+  try {
+    const { data } = await axiosInstance.get<string[]>('/mysubreddits', {});
+    return data || [];
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const getPosts = async (sort: string = 'hot') => {
+  try {
+    const { data } = await axiosInstance.post('/articles', { sort: 'hot', subreddit: 'all', range: '' });
+    console.log(data);
+  } catch (err) {
+    console.log(err);
   }
 };

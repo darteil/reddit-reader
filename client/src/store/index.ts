@@ -1,4 +1,5 @@
 import create from 'zustand';
+import { devtools, persist, subscribeWithSelector } from 'zustand/middleware';
 
 interface IStore {
   authorized: boolean;
@@ -10,14 +11,27 @@ interface IStore {
   setCurrentPostText: (text: string) => void;
 }
 
-const useStore = create<IStore>()((set) => ({
-  authorized: false,
-  currentSubreddit: 'all',
-  currentPostText: '',
+const useStore = create<IStore>()(
+  devtools(
+    subscribeWithSelector(
+      persist(
+        (set) => ({
+          // TODO: authorized set to false
+          authorized: true,
+          currentSubreddit: 'all',
+          currentPostText: '',
 
-  setAuthorized: (status) => set(() => ({ authorized: status })),
-  setCurrentSubreddit: (subreddit) => set(() => ({ currentSubreddit: subreddit })),
-  setCurrentPostText: (text) => set(() => ({ currentPostText: text })),
-}));
+          setAuthorized: (status) => set(() => ({ authorized: status })),
+          setCurrentSubreddit: (subreddit) => set(() => ({ currentSubreddit: subreddit })),
+          setCurrentPostText: (text) => set(() => ({ currentPostText: text })),
+        }),
+        {
+          name: 'app-storage',
+          partialize: (state) => ({ authorized: state.authorized }),
+        },
+      ),
+    ),
+  ),
+);
 
 export default useStore;
