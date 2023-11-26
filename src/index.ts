@@ -45,7 +45,7 @@ const startServer = async () => {
   try {
     await app.register(fastifyEnv, options);
 
-    await app.register(servestatic, {
+    app.register(servestatic, {
       root: staticPath,
     });
 
@@ -53,14 +53,15 @@ const startServer = async () => {
       parseOptions: { httpOnly: true },
     } as FastifyCookieOptions);
 
-    await app.register(routes.authRoutes, { prefix: "api" });
-    await app.register(routes.baseRoutes, { prefix: "api" });
+    app.register(routes.authRoute, { prefix: "api" });
+    app.register(routes.subredditsRoute, { prefix: "api" });
+    app.register(routes.articlesRoute, { prefix: "api" });
 
     app.get("/", (_, reply) => {
       reply.sendFile("index.html");
     });
 
-    app.listen({ port: parseInt(app.config.PORT) });
+    await app.listen({ port: parseInt(app.config.PORT) });
   } catch (err) {
     app.log.error(err);
     process.exit(1);

@@ -1,10 +1,10 @@
 import { FastifyInstance } from "fastify";
 import { AxiosError } from "axios";
-import axiosInstance from "./axiosInstance";
+import axiosInstance from "../axiosInstance";
 
 const tokenUrl = "https://www.reddit.com/api/v1/access_token";
 
-export const authRoutes = async (server: FastifyInstance) => {
+export const authRoute = async (server: FastifyInstance) => {
   // Get reddit authorization url
   server.get("/auth-url", (_, reply) => {
     const scope = "mysubreddits read history";

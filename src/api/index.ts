@@ -1,7 +1,9 @@
-import { authRoutes } from "./auth";
-import { baseRoutes } from "./base";
+import { authRoute } from "./routes/auth";
+import { subredditsRoute } from "./routes/subreddits";
+import { articlesRoute } from "./routes/articles";
 
 export const routes = {
-  authRoutes,
-  baseRoutes,
+  authRoute,
+  subredditsRoute,
+  articlesRoute,
 };

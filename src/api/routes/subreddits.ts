@@ -1,22 +1,21 @@
 import { FastifyInstance } from "fastify";
 import { AxiosError } from "axios";
-import axiosInstance from "./axiosInstance";
+import axiosInstance from "../axiosInstance";
 
-export const baseRoutes = async (server: FastifyInstance) => {
-  // Get subreddits list
+interface ISubreddit {
+  data: {
+    display_name_prefixed: string;
+  };
+}
+
+interface IRequestResult {
+  data: {
+    children: ISubreddit[];
+  };
+}
+
+export const subredditsRoute = async (server: FastifyInstance) => {
   server.get("/mysubreddits", async (request, reply) => {
-    interface ISubreddit {
-      data: {
-        display_name_prefixed: string;
-      };
-    }
-
-    interface IRequestResult {
-      data: {
-        children: ISubreddit[];
-      };
-    }
-
     const token = request.cookies.access_token;
     const url =
       "https://oauth.reddit.com/subreddits/mine/subscriber?raw_json=1&count=9999&limit=300";
