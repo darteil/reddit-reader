@@ -16,8 +16,7 @@ const useStore = create<IStore>()(
     subscribeWithSelector(
       persist(
         (set) => ({
-          // TODO: authorized set to false
-          authorized: true,
+          authorized: false,
           currentSubreddit: 'all',
           currentPostText: '',
 

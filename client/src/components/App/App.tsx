@@ -10,30 +10,36 @@ const App = () => {
   const setAuthorized = useStore((state) => state.setAuthorized);
 
   useEffect(() => {
+    if (authorized) {
+      getPosts();
+      return;
+    }
+
     const getUrl = async () => {
       const url = await getRedditAuthUrl();
       setAuthUrl(url);
     };
 
-    getPosts();
-
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const code = urlParams.get('code');
 
-    if (!authorized && !code) {
+    if (code) {
+      login(code).then(() => {
+        getPosts();
+      });
+    } else {
       getUrl();
-    } else if (!authorized && code) {
-      login(code);
-      setAuthorized(true);
-    } else if (authorized) {
-      setAuthorized(true);
     }
   }, []);
 
   return (
     <div>
-      {!authorized && <a href={authUrl}>login</a>}
+      {!authorized && (
+        <a style={{ fontSize: 20 }} href={authUrl}>
+          login
+        </a>
+      )}
       {authorized && <Wrapper />}
     </div>
   );
