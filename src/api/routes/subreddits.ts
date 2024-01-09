@@ -1,6 +1,6 @@
-import { FastifyInstance } from "fastify";
-import { AxiosError } from "axios";
-import axiosInstance from "../axiosInstance";
+import { FastifyInstance } from 'fastify';
+import { AxiosError } from 'axios';
+import axiosInstance from '../axiosInstance';
 
 interface ISubreddit {
   data: {
@@ -15,10 +15,9 @@ interface IRequestResult {
 }
 
 export const subredditsRoute = async (server: FastifyInstance) => {
-  server.get("/mysubreddits", async (request, reply) => {
+  server.get('/mysubreddits', async (request, reply) => {
     const token = request.cookies.access_token;
-    const url =
-      "https://oauth.reddit.com/subreddits/mine/subscriber?raw_json=1&count=9999&limit=300";
+    const url = 'https://oauth.reddit.com/subreddits/mine/subscriber?raw_json=1&count=9999&limit=300';
 
     try {
       const { data } = await axiosInstance.get<IRequestResult>(url, {
@@ -34,9 +33,7 @@ export const subredditsRoute = async (server: FastifyInstance) => {
       reply.send(arr);
     } catch (err) {
       if (err instanceof AxiosError) {
-        reply
-          .status(err?.response?.status || 500)
-          .send(err?.response?.statusText || "Unexpected error");
+        reply.status(err?.response?.status || 500).send(err?.response?.statusText || 'Unexpected error');
       } else {
         reply.send(err);
       }
