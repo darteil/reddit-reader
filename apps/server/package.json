@@ -1,0 +1,26 @@
+{
+  "name": "reddit-reader-server",
+  "version": "1.0.0",
+  "license": "MIT",
+  "author": "Romanov Yuri",
+  "main": "./src/index.ts",
+  "scripts": {
+    "format": "prettier . --write",
+    "start": "nodemon"
+  },
+  "dependencies": {
+    "@fastify/cookie": "^8.3.0",
+    "@fastify/env": "^4.1.0",
+    "@fastify/static": "^6.5.0",
+    "axios": "^1.2.1",
+    "fastify": "^4.6.0",
+    "ts-node": "^10.9.1"
+  },
+  "devDependencies": {
+    "@types/node": "^18.7.23",
+    "nodemon": "^3.1.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
