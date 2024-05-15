@@ -12,7 +12,7 @@ const unsubscribeAuthorized = useStore.subscribe(
 
 export const refreshToken = async () => {
   try {
-    await axios.post("http://127.0.0.1:7000/api/refresh-token");
+    await axios.post("/api/refresh-token");
   } catch (err) {
     if (err instanceof AxiosError) {
       if (err?.response?.status === 400) {
@@ -26,7 +26,7 @@ export const refreshToken = async () => {
 };
 
 const axiosInstance = axios.create({
-  baseURL: "http://127.0.0.1:7000/api",
+  baseURL: "/api",
   withCredentials: true,
 });
 

@@ -11,7 +11,7 @@ const envPath = path.join(__dirname, "..", "/.env");
 
 const envSchema = {
   type: "object",
-  required: ["PORT", "USER_AGENT", "CLIENT_ID", "CLIENT_SECRET"],
+  required: ["PORT", "USER_AGENT", "CLIENT_ID", "CLIENT_SECRET", "CLIENT_URL_ADRESS"],
   properties: {
     PORT: {
       type: "string",
@@ -28,6 +28,10 @@ const envSchema = {
     CLIENT_SECRET: {
       type: "string",
       default: "",
+    },
+    CLIENT_URL_ADRESS: {
+      type: "string",
+      default: "http://localhost:5173",
     },
   },
 };

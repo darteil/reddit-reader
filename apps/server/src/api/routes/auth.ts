@@ -10,7 +10,7 @@ export const authRoute = async (server: FastifyInstance) => {
     const scope = "mysubreddits read history";
     const url = [
       `https://www.reddit.com/api/v1/authorize?client_id=${server.config.CLIENT_ID}&response_type=code`,
-      `&state=randomstring&redirect_uri=http://127.0.0.1:7000/&duration=permanent&scope=${scope}`,
+      `&state=randomstring&redirect_uri=${server.config.CLIENT_URL_ADRESS}&duration=permanent&scope=${scope}`,
     ];
     reply.send(url.join(""));
   });
@@ -20,7 +20,7 @@ export const authRoute = async (server: FastifyInstance) => {
     const params = new URLSearchParams({
       grant_type: "authorization_code",
       code: request.body.code,
-      redirect_uri: "http://127.0.0.1:7000/",
+      redirect_uri: server.config.CLIENT_URL_ADRESS,
     });
 
     try {
