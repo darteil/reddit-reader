@@ -1,7 +1,6 @@
 import React from "react";
 import { getMySubreddits } from "api";
 import { useEffect, useState } from "react";
-import { Dropdown, Input } from "semantic-ui-react";
 
 const options = ["r/subreddit", "r/subreddit2", "r/subreddit3"];
 
@@ -24,23 +23,9 @@ const NavigationMenu = () => {
   }, []);
 
   return (
-    <Dropdown text={sub} button labeled icon="align justify" className="primary icon">
-      <Dropdown.Menu>
-        <Input
-          icon="search"
-          iconPosition="left"
-          className="search"
-          onClick={(e: React.MouseEvent<HTMLInputElement, MouseEvent>) => e.stopPropagation()}
-        />
-        <Dropdown.Divider />
-        <Dropdown.Header content="subreddits" />
-        <Dropdown.Menu scrolling>
-          {subList.map((option, index) => (
-            <Dropdown.Item key={`${index}-${option}`} text={option} onClick={() => setSub(option)} />
-          ))}
-        </Dropdown.Menu>
-      </Dropdown.Menu>
-    </Dropdown>
+    <div>
+      <p>Navigation</p>
+    </div>
   );
 };
 
