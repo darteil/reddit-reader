@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Text } from "@mantine/core";
 import useStore from "store";
 import { getPosts, login, logout, getRedditAuthUrl } from "api";
 import { Wrapper } from "../Wrapper";
@@ -36,9 +37,12 @@ const App = () => {
   return (
     <div>
       {!authorized && (
-        <a style={{ fontSize: 20 }} href={authUrl}>
-          login
-        </a>
+        <>
+          <Text size="xl">Text example...</Text>
+          <a style={{ fontSize: 20 }} href={authUrl}>
+            login
+          </a>
+        </>
       )}
       {authorized && <Wrapper />}
     </div>
