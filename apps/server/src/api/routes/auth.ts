@@ -1,6 +1,6 @@
 import { FastifyInstance } from "fastify";
 import { AxiosError } from "axios";
-import axiosInstance from "../axiosInstance";
+import axiosInstance from "../axios-instance";
 
 const tokenUrl = "https://www.reddit.com/api/v1/access_token";
 

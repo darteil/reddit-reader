@@ -1,6 +1,6 @@
 import { FastifyInstance, FastifyRequest } from "fastify";
 import { AxiosError } from "axios";
-import axiosInstance from "../axiosInstance";
+import axiosInstance from "../axios-instance";
 
 interface IBody {
   subreddit: string;
