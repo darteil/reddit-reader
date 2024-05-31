@@ -1,0 +1,11 @@
+{
+  "name": "reddit-api-types",
+  "private": true,
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "pnpm run clean && tsc",
+    "clean": "rm -rf dist"
+  },
+  "author": "Romanov Yuri",
+  "license": "MIT"
+}

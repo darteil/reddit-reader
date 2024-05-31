@@ -14,6 +14,7 @@
     "@fastify/static": "^6.5.0",
     "axios": "^1.2.1",
     "fastify": "^4.6.0",
+    "reddit-api-types": "workspace:^",
     "ts-node": "^10.9.1"
   },
   "devDependencies": {
