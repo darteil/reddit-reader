@@ -1,0 +1,19 @@
+.root {
+  height: 100vh;
+  background-color: var(--mantine-color-gray-2);
+}
+.wrapper {
+  padding-top: rem(120px);
+}
+
+.text {
+  text-align: center;
+  font-weight: 600;
+  padding-bottom: rem(20px);
+  font-size: rem(40px);
+}
+
+.controls {
+  display: flex;
+  justify-content: center;
+}
