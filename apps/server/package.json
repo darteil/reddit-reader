@@ -12,7 +12,6 @@
     "@fastify/cookie": "^9.4.0",
     "@fastify/env": "^4.4.0",
     "@fastify/static": "^7.0.4",
-    "axios": "^1.7.6",
     "fastify": "^4.28.1",
     "reddit-api-types": "workspace:^",
     "ts-node": "^10.9.1"

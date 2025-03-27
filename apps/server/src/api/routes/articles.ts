@@ -1,6 +1,5 @@
 import { FastifyInstance, FastifyRequest } from "fastify";
-import { AxiosError } from "axios";
-import axiosInstance from "../axios-instance";
+// import { RedditContent, RedditPostData } from "reddit-api-types";
 
 interface IBody {
   subreddit: string;
@@ -36,19 +35,40 @@ export const articlesRoute = async (server: FastifyInstance) => {
       }
 
       try {
-        const { data } = await axiosInstance.get(url, {
+        const response = await fetch(url, {
           headers: {
             Authorization: `bearer ${token}`,
           },
         });
+        const data = await response.json();
 
         reply.send(data.data.children);
       } catch (err) {
-        if (err instanceof AxiosError) {
-          reply.status(err?.response?.status || 500).send(err?.response?.statusText || "Unexpected error");
-        } else {
-          reply.send(err);
-        }
+        reply.send(err);
+      }
+    },
+  );
+};
+
+export const articlesForUnauthorizedUserRoute = async (server: FastifyInstance) => {
+  server.post(
+    "/articlesForUnauthorizedUserRoute",
+    async (
+      request: FastifyRequest<{
+        Body: IBody;
+      }>,
+      reply,
+    ) => {
+      const { subreddit, sort, range } = request.body;
+
+      let url = "https://www.reddit.com/new.json";
+
+      try {
+        const response = await fetch(url);
+        const data = await response.json();
+        reply.send(data.data.children);
+      } catch (err) {
+        reply.send(err);
       }
     },
   );

@@ -1,6 +1,4 @@
 import { FastifyInstance } from "fastify";
-import { AxiosError } from "axios";
-import axiosInstance from "../axios-instance";
 
 const tokenUrl = "https://www.reddit.com/api/v1/access_token";
 
@@ -24,7 +22,9 @@ export const authRoute = async (server: FastifyInstance) => {
     });
 
     try {
-      const { data } = await axiosInstance.post(tokenUrl, params, {
+      const response = await fetch(tokenUrl, {
+        method: "POST",
+        body: params,
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
           "User-Agent": server.config.USER_AGENT,
@@ -33,6 +33,9 @@ export const authRoute = async (server: FastifyInstance) => {
           )}`,
         },
       });
+
+      const data = await response.json();
+      console.log(data);
 
       reply.setCookie("refresh_token", data.refresh_token, { path: "/" });
       reply.setCookie("access_token", data.access_token, { path: "/" });
@@ -50,7 +53,9 @@ export const authRoute = async (server: FastifyInstance) => {
     });
 
     try {
-      const { data } = await axiosInstance.post(tokenUrl, params, {
+      const response = await fetch(tokenUrl, {
+        method: "POST",
+        body: params,
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
           "User-Agent": server.config.USER_AGENT,
@@ -59,14 +64,11 @@ export const authRoute = async (server: FastifyInstance) => {
           )}`,
         },
       });
+
+      const data = await response.json();
       reply.setCookie("access_token", data.access_token, { path: "/" });
     } catch (err) {
-      if (err instanceof AxiosError) {
-        reply.status(err?.response?.status || 500).send(err?.response?.statusText || "Unexpected error");
-        console.log(err);
-      } else {
-        reply.send(err);
-      }
+      reply.send(err);
     }
   });
 
