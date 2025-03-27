@@ -6,7 +6,7 @@
   "main": "./src/index.ts",
   "scripts": {
     "format": "prettier . --write",
-    "start": "nodemon"
+    "start": "nodemon ./src/index.ts"
   },
   "dependencies": {
     "@fastify/cookie": "^9.4.0",
