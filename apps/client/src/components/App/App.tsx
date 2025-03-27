@@ -1,11 +1,10 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import useStore from "store";
-import { getPosts, login, logout, getRedditAuthUrl } from "api";
-import { Wrapper } from "../Wrapper";
-import { LoginPage } from "../LoginPage";
+import { getPosts, getPostsForUnauthorizedUser, login } from "api";
+import { Header } from "components/Header";
+import { Main } from "components/Main";
 
 const App = () => {
-  const [subreddits, setSubreddits] = useState<string[]>([]);
   const authorized = useStore((state) => state.authorized);
   const setAuthorized = useStore((state) => state.setAuthorized);
 
@@ -14,21 +13,30 @@ const App = () => {
     const urlParams = new URLSearchParams(queryString);
     const code = urlParams.get("code");
 
+    const setPosts = async () => {
+      const data = await getPosts();
+      if (data.length > 0) {
+        console.log(data);
+      }
+    };
+
     if (authorized) {
-      getPosts();
+      setPosts();
     } else if (code) {
       login(code).then(() => {
         setAuthorized(true);
-        getPosts();
+        setPosts();
       });
+    } else {
+      getPostsForUnauthorizedUser();
     }
   }, []);
 
   return (
-    <div>
-      {authorized && <Wrapper />}
-      {!authorized && <LoginPage />}
-    </div>
+    <>
+      <Header />
+      <Main />
+    </>
   );
 };
 

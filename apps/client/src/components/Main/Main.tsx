@@ -1,8 +1,7 @@
 import { logout } from "api";
 import useStore from "store";
-import { Header } from "../Header";
 
-const Wrapper = () => {
+const Main = () => {
   const setAuthorized = useStore((state) => state.setAuthorized);
 
   const exit = () => {
@@ -10,11 +9,7 @@ const Wrapper = () => {
     setAuthorized(false);
   };
 
-  return (
-    <>
-      <Header />
-    </>
-  );
+  return <div className="main"></div>;
 };
 
-export default Wrapper;
+export default Main;

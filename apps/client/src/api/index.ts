@@ -1,14 +1,8 @@
 import axios, { AxiosError } from "axios";
 import useStore from "store";
+import { RedditContent, RedditPostData } from "reddit-api-types";
 
 let { authorized } = useStore.getState();
-const { setAuthorized } = useStore.getState();
-const unsubscribeAuthorized = useStore.subscribe(
-  (state) => state.authorized,
-  () => {
-    authorized = useStore.getState().authorized;
-  },
-);
 
 export const refreshToken = async () => {
   try {
@@ -17,7 +11,6 @@ export const refreshToken = async () => {
     if (err instanceof AxiosError) {
       if (err?.response?.status === 400) {
         logout();
-        setAuthorized(false);
       }
     } else {
       console.log(err);
@@ -52,7 +45,6 @@ export const login = async (code: string) => {
     if (data === "authorization success") {
       const url = document.location.href;
       window.history.pushState({}, "", url.split("?")[0]);
-      setAuthorized(true);
     }
   } catch (err) {
     console.log(err);
@@ -62,7 +54,6 @@ export const login = async (code: string) => {
 export const logout = async () => {
   try {
     axiosInstance.post("/logout");
-    setAuthorized(false);
   } catch (err) {
     console.log(err);
   }
@@ -89,7 +80,21 @@ export const getMySubreddits = async () => {
 
 export const getPosts = async (sort: string = "hot") => {
   try {
-    const { data } = await axiosInstance.post("/articles", { sort: "hot", subreddit: "all", range: "" });
+    const response = await axiosInstance.post("/articles", { sort: "hot", subreddit: "all", range: "" });
+    return response.data as RedditContent<RedditPostData>[];
+  } catch (err) {
+    console.log(err);
+    return [];
+  }
+};
+
+export const getPostsForUnauthorizedUser = async (sort: string = "hot") => {
+  try {
+    const { data } = await axiosInstance.post("/articlesForUnauthorizedUserRoute", {
+      sort: "hot",
+      subreddit: "all",
+      range: "",
+    });
     console.log(data);
   } catch (err) {
     console.log(err);

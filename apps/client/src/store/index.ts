@@ -20,9 +20,10 @@ const useStore = create<IStore>()(
           currentSubreddit: "all",
           currentPostText: "",
 
-          setAuthorized: (status) => set(() => ({ authorized: status })),
-          setCurrentSubreddit: (subreddit) => set(() => ({ currentSubreddit: subreddit })),
-          setCurrentPostText: (text) => set(() => ({ currentPostText: text })),
+          setAuthorized: (status) => set(() => ({ authorized: status }), false, "setAuthorized"),
+          setCurrentSubreddit: (subreddit) =>
+            set(() => ({ currentSubreddit: subreddit }), false, "setCurrentSubreddit"),
+          setCurrentPostText: (text) => set(() => ({ currentPostText: text }), false, "setCurrentPostText"),
         }),
         {
           name: "app-storage",
