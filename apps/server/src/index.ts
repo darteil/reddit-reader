@@ -54,9 +54,9 @@ const startServer = async () => {
       parseOptions: { httpOnly: true },
     } as FastifyCookieOptions);
 
-    app.register(routes.authRoute, { prefix: "api" });
-    app.register(routes.subredditsRoute, { prefix: "api" });
-    app.register(routes.articlesRoute, { prefix: "api" });
+    routes.forEach((route) => {
+      app.register(route, { prefix: "api" });
+    });
 
     app.get("/", async function handler() {
       return { text: "Server working..." };
