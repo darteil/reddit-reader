@@ -7,13 +7,13 @@ let { authorized } = useStore.getState();
 export const refreshToken = async () => {
   try {
     await axios.post("/api/refresh-token");
-  } catch (err) {
-    if (err instanceof AxiosError) {
-      if (err?.response?.status === 400) {
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      if (error?.response?.status === 400) {
         logout();
       }
     } else {
-      console.log(err);
+      console.log(error);
     }
   }
 };
@@ -46,16 +46,24 @@ export const login = async (code: string) => {
       const url = document.location.href;
       window.history.pushState({}, "", url.split("?")[0]);
     }
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      console.log(error.response?.data.message);
+    } else {
+      console.log(error);
+    }
   }
 };
 
 export const logout = async () => {
   try {
     axiosInstance.post("/logout");
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      console.log(error.response?.data.message);
+    } else {
+      console.log(error);
+    }
   }
 };
 
@@ -63,8 +71,12 @@ export const getRedditAuthUrl = async () => {
   try {
     const { data } = await axiosInstance.get<string>("/auth-url");
     return data;
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      console.log(error.response?.data.message);
+    } else {
+      console.log(error);
+    }
     return "";
   }
 };
@@ -73,8 +85,12 @@ export const getMySubreddits = async () => {
   try {
     const { data } = await axiosInstance.get<string[]>("/mysubreddits", {});
     return data || [];
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      console.log(error.response?.data.message);
+    } else {
+      console.log(error);
+    }
   }
 };
 
@@ -82,8 +98,12 @@ export const getPosts = async (sort: string = "hot") => {
   try {
     const response = await axiosInstance.post("/articles", { sort: "hot", subreddit: "all", range: "" });
     return response.data as RedditContent<RedditPostData>[];
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      console.log(error.response?.data.message);
+    } else {
+      console.log(error);
+    }
     return [];
   }
 };
@@ -95,8 +115,13 @@ export const getPostsForUnauthorizedUser = async (sort: string = "hot") => {
       subreddit: "all",
       range: "",
     });
+
     console.log(data);
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      console.log(error.response?.data.message);
+    } else {
+      console.log(error);
+    }
   }
 };
